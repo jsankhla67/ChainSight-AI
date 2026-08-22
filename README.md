@@ -56,4 +56,3 @@ ChainSight AI generates the SQL, retrieves the data from MySQL, explains the res
 
 Jatin Sankhla
 
-GitHub
