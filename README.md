@@ -16,23 +16,6 @@ Users can ask business questions in plain English, and the system automatically 
 - 📈 Automatic Plotly visualizations
 - 📥 CSV export for AI-generated results
 
-## 🧠 AI Workflow
-
-```text
-User Question
-     ↓
-Hugging Face LLM
-     ↓
-SQL Generation
-     ↓
-SQL Validation
-     ↓
-MySQL
-     ↓
-Business Insight
-     ↓
-Visualization
-
 🛠️ Tech Stack
 
 Python · Streamlit · MySQL · SQLAlchemy · PyMySQL · Pandas · NumPy · Plotly · LangChain · Hugging Face
@@ -58,13 +41,16 @@ HF_TOKEN=your_huggingface_api_token
 Run:
 
 streamlit run app.py
+
 💡 Example
 
 Ask:
 
 What are the top 5 product categories by sales?
+or whatever u like to ask 
 
 ChainSight AI generates the SQL, retrieves the data from MySQL, explains the results, and automatically creates a visualization.
+
 
 👨‍💻 Author
 
