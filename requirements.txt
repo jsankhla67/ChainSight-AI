@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+plotly
+sqlalchemy
+pymysql
+
+langchain
+langchain-huggingface
+langchain-community
+
+huggingface_hub
+python-dotenv

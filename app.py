@@ -1,15 +1,16 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="E-Commerce Supply Chain Intelligence",
-    page_icon="📊",
+    page_title="ChainSight AI",
+    page_icon="🔗",
     layout="wide"
 )
 
-st.title("📊 E-Commerce Supply Chain Intelligence")
+st.title("🔗 ChainSight AI")
 
 st.markdown("""
-Welcome to the **E-Commerce Supply Chain Intelligence Dashboard**.
+Welcome to **ChainSight AI** — an AI-powered E-Commerce Supply Chain
+Intelligence platform.
 
 👈 Use the navigation menu on the left to explore:
 
@@ -19,4 +20,5 @@ Welcome to the **E-Commerce Supply Chain Intelligence Dashboard**.
 - 🚚 Supply Chain
 - ⭐ Review Analytics
 - 📦 Product Analytics
+- 🤖 AI Business Analyst
 """)
