@@ -8,12 +8,12 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("⭐ Review Analytics")
+st.title("Review Analytics")
 st.markdown("---")
 
-# =====================================================
+
 # KPI CARDS
-# =====================================================
+
 
 kpi = run_query("""
 SELECT
@@ -26,16 +26,16 @@ FROM reviews;
 
 c1, c2, c3, c4 = st.columns(4)
 
-c1.metric("⭐ Average Rating", kpi.loc[0, "avg_rating"])
-c2.metric("📝 Total Reviews", f"{kpi.loc[0, 'total_reviews']:,}")
-c3.metric("⬇ Lowest Rating", kpi.loc[0, "lowest_rating"])
-c4.metric("⬆ Highest Rating", kpi.loc[0, "highest_rating"])
+c1.metric("Average Rating", kpi.loc[0, "avg_rating"])
+c2.metric("Total Reviews", f"{kpi.loc[0, 'total_reviews']:,}")
+c3.metric(" Lowest Rating", kpi.loc[0, "lowest_rating"])
+c4.metric("Highest Rating", kpi.loc[0, "highest_rating"])
 
 st.markdown("---")
 
-# =====================================================
+
 # REVIEW DISTRIBUTION
-# =====================================================
+
 
 review_dist = run_query("""
 SELECT
@@ -58,9 +58,9 @@ fig.update_layout(template="plotly_white")
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
+
 # REVIEWS OVER TIME
-# =====================================================
+
 
 review_time = run_query("""
 SELECT
@@ -87,9 +87,8 @@ fig2.update_layout(template="plotly_white")
 
 st.plotly_chart(fig2, use_container_width=True)
 
-# =====================================================
+
 # CATEGORY RATINGS
-# =====================================================
 
 category = run_query("""
 SELECT
@@ -131,9 +130,9 @@ fig3 = px.bar(
 
 st.plotly_chart(fig3, use_container_width=True)
 
-# =====================================================
+
 # REVIEW SCORE SHARE
-# =====================================================
+
 
 pie = run_query("""
 SELECT
@@ -152,9 +151,9 @@ fig4 = px.pie(
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# =====================================================
+
 # RECENT REVIEWS
-# =====================================================
+
 
 recent = run_query("""
 SELECT

@@ -1,17 +1,16 @@
--- =====================================================
--- PROJECT : E-Commerce Supply Chain Intelligence
--- FILE    : 03_import.sql
--- PURPOSE : Import Olist Dataset
--- AUTHOR  : Jatin Sankhla
--- =====================================================
+-- 03_import.sql
+-- Short chain: Tables clear → CSV import → Row count check → Final summary
+
 
 USE ecommerce_supply_chain;
 
+-- Foreign key check temporarily off kar rahe hain
+-- taaki tables ko easily clear kiya ja sake
 SET FOREIGN_KEY_CHECKS = 0;
 
--- =====================================================
--- OPTIONAL: CLEAR TABLES BEFORE RE-IMPORT
--- =====================================================
+
+-- Purana data remove kar rahe hain
+-- Re-import karte time duplicate data avoid hoga
 
 TRUNCATE TABLE reviews;
 TRUNCATE TABLE payments;
@@ -23,9 +22,9 @@ TRUNCATE TABLE customers;
 TRUNCATE TABLE category_translation;
 TRUNCATE TABLE geolocation;
 
--- =====================================================
+
 -- 1. CUSTOMERS
--- =====================================================
+-- Customer CSV ka data customers table mein load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_customers_dataset.csv'
 INTO TABLE customers
@@ -41,13 +40,15 @@ customer_city,
 customer_state
 );
 
+-- Check kar rahe hain kitne customer records import hue
+
 SELECT 'Customers' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM customers;
 
--- =====================================================
+
 -- 2. CATEGORY TRANSLATION
--- =====================================================
+-- Product category ke English names load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/product_category_name_translation.csv'
 INTO TABLE category_translation
@@ -60,13 +61,15 @@ product_category_name,
 product_category_name_english
 );
 
+-- Imported category records ka count check kar rahe hain
+
 SELECT 'Category Translation' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM category_translation;
 
--- =====================================================
+
 -- 3. PRODUCTS
--- =====================================================
+-- Product ki information CSV se products table mein load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_products_dataset.csv'
 INTO TABLE products
@@ -86,13 +89,15 @@ product_height_cm,
 product_width_cm
 );
 
+-- Check kar rahe hain kitne products import hue
+
 SELECT 'Products' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM products;
 
--- =====================================================
+
 -- 4. SELLERS
--- =====================================================
+-- Seller ki basic information load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_sellers_dataset.csv'
 INTO TABLE sellers
@@ -107,13 +112,15 @@ seller_city,
 seller_state
 );
 
+-- Seller records ka count check kar rahe hain
+
 SELECT 'Sellers' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM sellers;
 
--- =====================================================
+
 -- 5. ORDERS
--- =====================================================
+-- Orders ki information database mein load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_orders_dataset.csv'
 INTO TABLE orders
@@ -132,13 +139,15 @@ order_delivered_customer_date,
 order_estimated_delivery_date
 );
 
+-- Imported orders ka count check kar rahe hain
+
 SELECT 'Orders' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM orders;
 
--- =====================================================
+
 -- 6. ORDER ITEMS
--- =====================================================
+-- Har order mein kaunse products hain uska data load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_order_items_dataset.csv'
 INTO TABLE order_items
@@ -156,13 +165,15 @@ price,
 freight_value
 );
 
+-- Order items ka count check kar rahe hain
+
 SELECT 'Order Items' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM order_items;
 
--- =====================================================
+
 -- 7. PAYMENTS
--- =====================================================
+-- Orders ke payment details load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_order_payments_dataset.csv'
 INTO TABLE payments
@@ -178,13 +189,15 @@ payment_installments,
 payment_value
 );
 
+-- Payment records ka count check kar rahe hain
+
 SELECT 'Payments' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM payments;
 
--- =====================================================
+
 -- 8. REVIEWS
--- =====================================================
+-- Customer reviews ka data load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_order_reviews_dataset.csv'
 INTO TABLE reviews
@@ -202,13 +215,15 @@ review_creation_date,
 review_answer_timestamp
 );
 
+-- Review records ka count check kar rahe hain
+
 SELECT 'Reviews' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM reviews;
 
--- =====================================================
+
 -- 9. GEOLOCATION
--- =====================================================
+-- Location aur coordinates ka data load kar rahe hain
 
 LOAD DATA LOCAL INFILE '/Users/jatinsankhla/Desktop/E-Commerce-Supply-Chain-Intelligence/data/raw/olist_geolocation_dataset.csv'
 INTO TABLE geolocation
@@ -224,15 +239,20 @@ geolocation_city,
 geolocation_state
 );
 
+-- Geolocation records ka count check kar rahe hain
+
 SELECT 'Geolocation' AS Table_Name,
 COUNT(*) AS Total_Rows
 FROM geolocation;
 
+
+-- Saare data import hone ke baad foreign key checks wapas on kar rahe hain
+
 SET FOREIGN_KEY_CHECKS = 1;
 
--- =====================================================
--- FINAL IMPORT SUMMARY
--- =====================================================
+
+-- Final import summary
+-- Har table mein total kitne records hain ek saath check kar rahe hain
 
 SELECT 'customers' AS table_name, COUNT(*) FROM customers
 UNION ALL

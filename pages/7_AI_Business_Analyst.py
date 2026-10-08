@@ -5,9 +5,9 @@ import plotly.express as px
 from ai.assistant import ask_business_question
 
 
-# =========================================================
+
 # PAGE CONFIG
-# =========================================================
+
 
 st.set_page_config(
     page_title="AI Business Analyst",
@@ -16,9 +16,9 @@ st.set_page_config(
 )
 
 
-# =========================================================
+
 # HEADER
-# =========================================================
+
 
 st.title("🤖 AI Business Analyst")
 
@@ -34,19 +34,15 @@ st.markdown(
 st.divider()
 
 
-# =========================================================
 # QUESTION INPUT
-# =========================================================
 
 question = st.text_input(
-    "💬 Ask a business question",
+    "Ask a business question",
     placeholder="Example: What are the top 5 product categories by sales?"
 )
 
 
-# =========================================================
 # EXAMPLE QUESTIONS
-# =========================================================
 
 st.markdown("### 💡 Example Questions")
 
@@ -68,9 +64,7 @@ with col3:
     )
 
 
-# =========================================================
 # RUN AI ANALYSIS
-# =========================================================
 
 if question:
 
@@ -84,9 +78,7 @@ if question:
             raw_results = result["results"]
             answer = result["answer"]
 
-            # -------------------------------------------------
-            # CONVERT RESULTS TO DATAFRAME
-            # -------------------------------------------------
+           # CONVERT RESULTS TO DATAFRAME
 
             if raw_results:
 
@@ -105,29 +97,23 @@ if question:
                 df = pd.DataFrame()
 
 
-            # =================================================
-            # BUSINESS ANSWER
-            # =================================================
+                       # BUSINESS ANSWER
 
-            st.subheader("💡 Business Insight")
+            st.subheader(" Business Insight")
 
             st.markdown(answer)
 
 
-            # =================================================
-            # RESULTS
-            # =================================================
+           # RESULTS
 
             if not df.empty:
 
                 st.divider()
 
-                st.subheader("📊 Data")
+                st.subheader(" Data")
 
 
-                # -------------------------------------------------
-                # CLEAN DATABASE VALUES
-                # -------------------------------------------------
+                 # CLEAN DATABASE VALUES
 
                 for column in df.columns:
 
@@ -141,9 +127,7 @@ if question:
                         )
 
 
-                # =================================================
-                # KPI DETECTION
-                # =================================================
+                     # KPI DETECTION
 
                 if df.shape == (1, 1):
 
@@ -157,15 +141,11 @@ if question:
                     )
 
 
-                # =================================================
-                # MULTI-COLUMN DATA
-                # =================================================
+                              # MULTI-COLUMN DATA
 
                 else:
 
-                    # ---------------------------------------------
-                    # DATA TABLE
-                    # ---------------------------------------------
+                     # DATA TABLE
 
                     st.dataframe(
                         df,
@@ -174,9 +154,7 @@ if question:
                     )
 
 
-                    # =================================================
-                    # AUTOMATIC CHART
-                    # =================================================
+                 # AUTOMATIC CHART
 
                     if len(df.columns) >= 2:
 
@@ -195,11 +173,9 @@ if question:
 
                             chart_df[y_column] = numeric_values
 
-                            st.subheader("📈 Visualization")
+                            st.subheader("Visualization")
 
-                            # -----------------------------------------
-                            # LINE CHART FOR TIME-SERIES DATA
-                            # -----------------------------------------
+                                 # LINE CHART FOR TIME-SERIES DATA
 
                             if (
                                 "month" in x_column.lower()
@@ -215,9 +191,7 @@ if question:
                                     title=f"{y_column.replace('_', ' ').title()} by {x_column.replace('_', ' ').title()}"
                                 )
 
-                            # -----------------------------------------
-                            # BAR CHART FOR RANKINGS/CATEGORIES
-                            # -----------------------------------------
+                                  # BAR CHART FOR RANKINGS/CATEGORIES
 
                             else:
 
@@ -244,25 +218,21 @@ if question:
                             )
 
 
-                # =================================================
-                # DOWNLOAD CSV
-                # =================================================
+               # DOWNLOAD CSV
 
                 st.divider()
 
                 csv = df.to_csv(index=False)
 
                 st.download_button(
-                    label="📥 Download Results as CSV",
+                    label=" Download Results as CSV",
                     data=csv,
                     file_name="ai_business_analysis.csv",
                     mime="text/csv"
                 )
 
 
-            # =================================================
-            # SQL DETAILS
-            # =================================================
+              # SQL DETAILS
 
             with st.expander("🔍 View Generated SQL"):
 
@@ -275,5 +245,5 @@ if question:
         except Exception as e:
 
             st.error(
-                f"❌ Unable to analyze the question:\n\n{e}"
+                f" Unable to analyze the question:\n\n{e}"
             )

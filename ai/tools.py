@@ -1,9 +1,14 @@
+# database se kaam karne wale functions.
+
+
+
 from sqlalchemy import text
 from utils.database import engine
 
 
 def get_database_schema():
-    """Return the database tables and columns."""
+
+    # database ka structure read karke AI ko batata hai ki kaunse tables, columns aur data types use krna hain.
 
     query = text("""
         SELECT

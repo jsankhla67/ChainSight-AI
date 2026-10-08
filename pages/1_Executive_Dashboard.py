@@ -11,9 +11,8 @@ st.set_page_config(
 st.title("🏠 Executive Dashboard")
 st.markdown("---")
 
-# =====================================================
 # KPI CARDS
-# =====================================================
+
 
 kpi_query = """
 SELECT
@@ -41,9 +40,9 @@ col6.metric("🧾 Avg Order Value", f"${kpi.loc[0,'average_order_value']:,.2f}")
 
 st.markdown("---")
 
-# =====================================================
+
 # MONTHLY REVENUE TREND
-# =====================================================
+
 
 monthly_sales = run_query("""
 SELECT
@@ -75,9 +74,8 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
 # PAYMENT METHODS
-# =====================================================
+
 
 left, right = st.columns(2)
 
@@ -101,9 +99,8 @@ with left:
 
     st.plotly_chart(fig2, use_container_width=True)
 
-# =====================================================
 # TOP CATEGORIES
-# =====================================================
+
 
 with right:
 
@@ -133,9 +130,9 @@ with right:
 
 st.markdown("---")
 
-# =====================================================
+
 # ORDERS BY STATE
-# =====================================================
+
 
 state = run_query("""
 SELECT
@@ -157,9 +154,8 @@ fig4 = px.bar(
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# =====================================================
 # TOP PRODUCTS
-# =====================================================
+
 
 products = run_query("""
 SELECT

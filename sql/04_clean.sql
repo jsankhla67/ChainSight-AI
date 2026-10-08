@@ -1,15 +1,12 @@
--- =====================================================
--- PROJECT  : E-Commerce Supply Chain Intelligence
--- FILE     : 04_clean.sql
--- PURPOSE  : Data Cleaning & Data Quality Validation
--- AUTHOR   : Jatin Sankhla
--- =====================================================
+-- 04_clean.sql
+-- Short chain: Count → Duplicates → NULLs → Invalid Data → Relationships → Final Checks
+
 
 USE ecommerce_supply_chain;
 
--- =====================================================
+
 -- 1. ROW COUNT CHECK
--- =====================================================
+-- Har table mein kitna data hai wo check kar rahe hain
 
 SELECT 'customers' AS table_name, COUNT(*) AS total_rows FROM customers
 UNION ALL
@@ -29,9 +26,9 @@ SELECT 'geolocation', COUNT(*) FROM geolocation
 UNION ALL
 SELECT 'category_translation', COUNT(*) FROM category_translation;
 
--- =====================================================
+
 -- 2. DUPLICATE CHECKS
--- =====================================================
+-- Check kar rahe hain ki important IDs duplicate toh nahi hain
 
 -- Customers
 SELECT customer_id, COUNT(*) AS duplicates
@@ -63,9 +60,9 @@ FROM reviews
 GROUP BY review_id
 HAVING COUNT(*) > 1;
 
--- =====================================================
+
 -- 3. NULL VALUE CHECKS
--- =====================================================
+-- Important columns mein missing values check kar rahe hain
 
 SELECT
 SUM(customer_id IS NULL) AS customer_id_null,
@@ -95,119 +92,106 @@ SELECT
 SUM(review_score IS NULL) AS review_score_null
 FROM reviews;
 
--- =====================================================
+
 -- 4. INVALID VALUES
--- =====================================================
+-- Aise values check kar rahe hain jo logically possible nahi hain
 
--- Invalid Prices
-
+-- Price zero ya negative toh nahi hai
 SELECT *
 FROM order_items
 WHERE price <= 0;
 
--- Invalid Freight
-
+-- Freight negative toh nahi hai
 SELECT *
 FROM order_items
 WHERE freight_value < 0;
 
--- Invalid Weight
-
+-- Product weight valid hai ya nahi
 SELECT *
 FROM products
 WHERE product_weight_g <= 0;
 
--- Invalid Dimensions
-
+-- Product dimensions valid hain ya nahi
 SELECT *
 FROM products
 WHERE product_length_cm <= 0
 OR product_width_cm <= 0
 OR product_height_cm <= 0;
 
--- Invalid Payment
-
+-- Payment value valid hai ya nahi
 SELECT *
 FROM payments
 WHERE payment_value <= 0;
 
--- =====================================================
+
 -- 5. REVIEW VALIDATION
--- =====================================================
+-- Review score 1 se 5 ke beech hona chahiye
 
 SELECT *
 FROM reviews
 WHERE review_score NOT BETWEEN 1 AND 5;
 
--- =====================================================
+
 -- 6. DATE VALIDATION
--- =====================================================
+-- Order dates ka sequence logically correct hai ya nahi check kar rahe hain
 
--- Delivered before purchase
-
+-- Delivery purchase se pehle toh nahi hui
 SELECT *
 FROM orders
 WHERE order_delivered_customer_date < order_purchase_timestamp;
 
--- Approved before purchase
-
+-- Approval purchase se pehle toh nahi hua
 SELECT *
 FROM orders
 WHERE order_approved_at < order_purchase_timestamp;
 
--- Estimated delivery before purchase
-
+-- Estimated delivery purchase se pehle toh nahi hai
 SELECT *
 FROM orders
 WHERE order_estimated_delivery_date < order_purchase_timestamp;
 
--- =====================================================
+
 -- 7. ORPHAN RECORD CHECKS
--- =====================================================
+-- Check kar rahe hain ki child records ka parent record missing toh nahi hai
 
--- Orders without Customers
-
+-- Aise orders jo kisi customer se connected nahi hain
 SELECT o.order_id
 FROM orders o
 LEFT JOIN customers c
 ON o.customer_id = c.customer_id
 WHERE c.customer_id IS NULL;
 
--- Order Items without Products
-
+-- Aise order items jo kisi product se connected nahi hain
 SELECT oi.product_id
 FROM order_items oi
 LEFT JOIN products p
 ON oi.product_id = p.product_id
 WHERE p.product_id IS NULL;
 
--- Order Items without Sellers
-
+-- Aise order items jo kisi seller se connected nahi hain
 SELECT oi.seller_id
 FROM order_items oi
 LEFT JOIN sellers s
 ON oi.seller_id = s.seller_id
 WHERE s.seller_id IS NULL;
 
--- Payments without Orders
-
+-- Aise payments jinka order exist nahi karta
 SELECT p.order_id
 FROM payments p
 LEFT JOIN orders o
 ON p.order_id = o.order_id
 WHERE o.order_id IS NULL;
 
--- Reviews without Orders
-
+-- Aise reviews jinka order exist nahi karta
 SELECT r.order_id
 FROM reviews r
 LEFT JOIN orders o
 ON r.order_id = o.order_id
 WHERE o.order_id IS NULL;
 
--- =====================================================
+
 -- 8. ZIP CODE VALIDATION
--- =====================================================
+-- Check kar rahe hain ki zip code valid value mein hai
 
 SELECT *
 FROM customers
@@ -221,9 +205,9 @@ SELECT *
 FROM geolocation
 WHERE geolocation_zip_code_prefix <= 0;
 
--- =====================================================
+
 -- 9. CATEGORY VALIDATION
--- =====================================================
+-- Check kar rahe hain ki product ki category translation table mein available hai
 
 SELECT DISTINCT product_category_name
 FROM products
@@ -234,9 +218,9 @@ SELECT product_category_name
 FROM category_translation
 );
 
--- =====================================================
+
 -- 10. ORDER STATUS DISTRIBUTION
--- =====================================================
+-- Orders ke different status ka count dekh rahe hain
 
 SELECT
 order_status,
@@ -245,9 +229,9 @@ FROM orders
 GROUP BY order_status
 ORDER BY total_orders DESC;
 
--- =====================================================
+
 -- 11. PAYMENT TYPE DISTRIBUTION
--- =====================================================
+-- Kaunsa payment method kitni baar use hua wo check kar rahe hain
 
 SELECT
 payment_type,
@@ -256,9 +240,9 @@ FROM payments
 GROUP BY payment_type
 ORDER BY total_payments DESC;
 
--- =====================================================
+
 -- 12. REVIEW SCORE DISTRIBUTION
--- =====================================================
+-- Har review score ka total count dekh rahe hain
 
 SELECT
 review_score,
@@ -267,6 +251,5 @@ FROM reviews
 GROUP BY review_score
 ORDER BY review_score;
 
--- =====================================================
--- END OF DATA CLEANING
--- =====================================================
+
+-- Data cleaning aur quality checks yaha complete hote hain

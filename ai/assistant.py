@@ -1,7 +1,9 @@
+# WORKING OF AI ASSISTANT
+
 import os
 
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 
 from ai.prompts import SQL_SYSTEM_PROMPT, ANSWER_SYSTEM_PROMPT
@@ -10,49 +12,49 @@ from ai.tools import get_database_schema, execute_sql
 
 load_dotenv()
 
-HF_TOKEN = os.getenv("HF_TOKEN")
 
-if not HF_TOKEN:
-    raise ValueError("HF_TOKEN is not set in .env")
+# NVIDIA API KEY
+
+NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
+
+if not NVIDIA_API_KEY:
+    raise ValueError("NVIDIA_API_KEY is not set in .env")
 
 
-# =========================================================
-# HUGGING FACE MODEL
-# =========================================================
+# NVIDIA MODEL
 
-llm = HuggingFaceEndpoint(
-    repo_id="Qwen/Qwen3-4B-Instruct-2507",
-    huggingfacehub_api_token=HF_TOKEN,
-    temperature=0.1,
-    max_new_tokens=512,
+# Yaha NVIDIA ka OpenAI compatible API use kr rhe hai
+# Isse hum LangChain ke through NVIDIA model ko call kr sakte hai
+
+chat_model = ChatOpenAI(
+    model="openai/gpt-oss-20b",
+    api_key=NVIDIA_API_KEY,
+    base_url="https://integrate.api.nvidia.com/v1",
+    temperature=0.1, # controls randomness of AI responses
+    max_tokens=1024, # maximum number of tokens in the AI response
 )
 
-chat_model = ChatHuggingFace(llm=llm)
 
-
-# =========================================================
-# SQL VALIDATION
-# =========================================================
+# SQL VALIDATION - safety check.
 
 def validate_sql(sql: str) -> bool:
-    """
-    Validate that the AI generated query is read-only.
-
-    Only SELECT queries are allowed.
-    """
 
     if not sql:
-        raise ValueError("AI generated an empty SQL query.")
+        raise ValueError("AI generated an empty SQL query.") # if AI generated empty SQL query
 
-    sql_clean = sql.strip().lower()
+    sql_clean = sql.strip().lower() # Extra spaces/markdown remove
 
-    # Remove accidental markdown
+    # AI kabhi kabhi SQL ko markdown code block ke andar return kr deta hai
+    # Isliye yaha unwanted markdown remove kr rhe hai
+
     sql_clean = sql_clean.replace("```sql", "")
     sql_clean = sql_clean.replace("```mysql", "")
     sql_clean = sql_clean.replace("```", "")
-    sql_clean = sql_clean.strip()
+    sql_clean = sql_clean.strip() # removes white space from end and begining 
 
-    # Must start with SELECT or WITH
+    # Query SELECT ya WITH se start honi chahiye
+    # Hum database me data change krne wali query allow nahi kr rhe
+
     if not (
         sql_clean.startswith("select")
         or sql_clean.startswith("with")
@@ -61,7 +63,8 @@ def validate_sql(sql: str) -> bool:
             "Only read-only SELECT queries are allowed."
         )
 
-    # Dangerous SQL operations
+    # Dangerous SQL keywords ko yaha block kr rhe hai
+
     forbidden_keywords = [
         "insert ",
         "update ",
@@ -86,23 +89,27 @@ def validate_sql(sql: str) -> bool:
     return True
 
 
-# =========================================================
-# GENERATE SQL
-# =========================================================
+# YAHA PR APN SQL FUNCTION BNA RHE HAI JO KI NATURAL LANGUAGE QUESTION
+# KO MYSQL SELECT QUERY ME CONVERT KREGA
 
-def generate_sql(question: str) -> str:
-    """
-    Convert a natural-language business question
-    into a MySQL SELECT query.
-    """
+def generate_sql(question: str):
+
+    # Sabse pehle database ka schema le rhe hai
+    # AI ko pata hona chahiye ki database me kaunse tables aur columns hai
 
     schema = get_database_schema()
+
+    # SQL ke liye prompt create kr rhe hai
 
     prompt = ChatPromptTemplate.from_template(
         SQL_SYSTEM_PROMPT
     )
 
-    chain = prompt | chat_model
+    # Prompt ko NVIDIA model ke saath connect kr rhe hai
+
+    chain = prompt | chat_model 
+
+    # User ka question aur database schema AI ko bhej rhe hai
 
     response = chain.invoke(
         {
@@ -111,40 +118,42 @@ def generate_sql(question: str) -> str:
         }
     )
 
+    # AI ke response ko string me convert kr rhe hai
+
     sql = response.content.strip()
 
-    # Remove accidental markdown code fences
+    # AI agar SQL ko markdown code block me return kare
+    # to usko remove kr denge
+
     sql = sql.replace("```sql", "")
     sql = sql.replace("```mysql", "")
     sql = sql.replace("```", "")
 
     sql = sql.strip()
 
-    # Validate immediately
+    # SQL execute karne se pehle security validation
+
     validate_sql(sql)
 
     return sql
 
 
-# =========================================================
-# GENERATE BUSINESS ANSWER
-# =========================================================
+# DATABASE RESULTS KO HUMAN READABLE BUSINESS ANSWER ME CONVERT KRNE KE LIYE
 
-def generate_business_answer(
-    question: str,
-    sql: str,
-    results
-) -> str:
-    """
-    Convert database results into a
-    human-readable business explanation.
-    """
+def generate_business_answer( question: str, sql: str, results ) -> str:
+
+    # Business answer ke liye alag prompt use kr rhe hai
 
     prompt = ChatPromptTemplate.from_template(
         ANSWER_SYSTEM_PROMPT
     )
 
+    # Prompt ko NVIDIA model ke saath connect kr rhe hai
+
     chain = prompt | chat_model
+
+    # User question, generated SQL aur database results
+    # AI ko bhej rhe hai taaki wo business explanation de sake
 
     response = chain.invoke(
         {
@@ -157,56 +166,35 @@ def generate_business_answer(
     return response.content.strip()
 
 
-# =========================================================
 # COMPLETE BUSINESS ANALYST PIPELINE
-# =========================================================
 
 def ask_business_question(question: str):
-    """
-    Complete AI Business Analyst pipeline:
 
-    User Question
-        ↓
-    Hugging Face
-        ↓
-    SQL Generation
-        ↓
-    SQL Safety Validation
-        ↓
-    MySQL
-        ↓
-    Results
-        ↓
-    Business Explanation
-    """
-
-    # -----------------------------------------------------
-    # 1. Generate SQL
-    # -----------------------------------------------------
+    # Step 1:
+    # Natural language question ko SQL query me convert krna
 
     sql = generate_sql(question)
 
-    # -----------------------------------------------------
-    # 2. Validate SQL again before database execution
-    # -----------------------------------------------------
+    # Step 2:
+    # Generated SQL ko dobara validate krna
 
     validate_sql(sql)
 
-    # -----------------------------------------------------
-    # 3. Execute SQL
-    # -----------------------------------------------------
+    # Step 3:
+    # Valid SQL ko database me execute krna
 
     results = execute_sql(sql)
 
-    # -----------------------------------------------------
-    # 4. Generate business explanation
-    # -----------------------------------------------------
+    # Step 4:
+    # Database ke results ko human readable business answer me convert krna
 
     answer = generate_business_answer(
         question,
         sql,
         results
     )
+
+    # Saari information ek dictionary ke form me return kr rhe hai
 
     return {
         "question": question,

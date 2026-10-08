@@ -11,9 +11,9 @@ st.set_page_config(
 st.title("💰 Sales Analytics")
 st.markdown("---")
 
-# =====================================================
+
 # KPI CARDS
-# =====================================================
+
 
 kpi = run_query("""
 SELECT
@@ -33,9 +33,9 @@ c4.metric("🏆 Highest Order", f"${kpi.loc[0,'highest_order']:,.2f}")
 
 st.markdown("---")
 
-# =====================================================
+
 # MONTHLY SALES
-# =====================================================
+
 
 monthly = run_query("""
 SELECT
@@ -64,9 +64,9 @@ fig.update_layout(template="plotly_white")
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
+
 # CATEGORY REVENUE
-# =====================================================
+
 
 left, right = st.columns(2)
 
@@ -120,9 +120,9 @@ with right:
 
 st.markdown("---")
 
-# =====================================================
+
 # PAYMENT TYPES
-# =====================================================
+
 
 payment = run_query("""
 SELECT
@@ -141,9 +141,9 @@ fig4 = px.pie(
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# =====================================================
+
 # TOP PRODUCTS
-# =====================================================
+
 
 products = run_query("""
 SELECT

@@ -1,34 +1,25 @@
--- =====================================================
--- PROJECT : E-Commerce Supply Chain Intelligence
--- FILE    : 01_setup.sql
--- PURPOSE : Database Setup
--- AUTHOR  : Jatin Sankhla
--- =====================================================
+-- Agar database pehle se bana hua hai to pehle usko hata do
 
--- Remove the database if it already exists
 DROP DATABASE IF EXISTS ecommerce_supply_chain;
 
--- Create a fresh database
+-- Ab fresh database create kar rahe hain
+
 CREATE DATABASE ecommerce_supply_chain
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
--- Select the database
+-- Ab isi database par kaam karenge
+
 USE ecommerce_supply_chain;
 
--- =====================================================
--- VERIFY DATABASE
--- =====================================================
+-- Saare available databases checking 
 
--- Display all databases
 SHOW DATABASES;
 
--- Confirm the selected database
+-- Check kar rahe hain ki abhi kaunsa database selected hai
+
 SELECT DATABASE() AS current_database;
 
--- Show MySQL version
-SELECT VERSION() AS mysql_version;
+-- MySQL ka version check kar rahe hain
 
--- =====================================================
--- END OF SETUP
--- =====================================================
+SELECT VERSION() AS mysql_version;

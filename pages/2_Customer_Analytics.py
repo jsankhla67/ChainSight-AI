@@ -11,9 +11,9 @@ st.set_page_config(
 st.title("👥 Customer Analytics")
 st.markdown("---")
 
-# =====================================================
+
 # KPI CARDS
-# =====================================================
+
 
 kpi = run_query("""
 SELECT
@@ -55,9 +55,9 @@ c4.metric("Avg Orders / Customer", avg_orders.loc[0,"avg_orders"])
 
 st.markdown("---")
 
-# =====================================================
+
 # CUSTOMER GROWTH
-# =====================================================
+
 
 growth = run_query("""
 SELECT
@@ -84,9 +84,9 @@ fig.update_layout(template="plotly_white")
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
+
 # TWO CHARTS
-# =====================================================
+
 
 left, right = st.columns(2)
 
@@ -138,9 +138,8 @@ with right:
 
 st.markdown("---")
 
-# =====================================================
 # CUSTOMER SEGMENTATION
-# =====================================================
+
 
 segment = run_query("""
 SELECT
@@ -183,9 +182,9 @@ fig4 = px.pie(
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# =====================================================
+
 # CUSTOMER TABLE
-# =====================================================
+
 
 table = run_query("""
 SELECT

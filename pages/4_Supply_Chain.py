@@ -11,9 +11,9 @@ st.set_page_config(
 st.title("🚚 Supply Chain Analytics")
 st.markdown("---")
 
-# =====================================================
+
 # KPI CARDS
-# =====================================================
+
 
 kpi = run_query("""
 SELECT
@@ -55,9 +55,9 @@ c4.metric("⚠ Late Deliveries", f"{late.loc[0,'late_orders']:,}")
 
 st.markdown("---")
 
-# =====================================================
+
 # DELIVERY TREND
-# =====================================================
+
 
 delivery = run_query("""
 SELECT
@@ -98,9 +98,9 @@ fig.update_layout(template="plotly_white")
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
+
 # TWO CHARTS
-# =====================================================
+
 
 left, right = st.columns(2)
 
@@ -151,9 +151,9 @@ with right:
 
 st.markdown("---")
 
-# =====================================================
+
 # DELIVERY STATUS
-# =====================================================
+
 
 status = run_query("""
 SELECT
@@ -182,9 +182,9 @@ fig4 = px.pie(
 
 st.plotly_chart(fig4, use_container_width=True)
 
-# =====================================================
+
 # TOP SHIPPING COST
-# =====================================================
+
 
 shipping = run_query("""
 SELECT

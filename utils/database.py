@@ -4,9 +4,9 @@ import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
-load_dotenv()
+load_dotenv() # .env ko load krta hai 
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") #  
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set")

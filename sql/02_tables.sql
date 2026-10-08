@@ -1,15 +1,14 @@
--- =====================================================
--- PROJECT : E-Commerce Supply Chain Intelligence
--- FILE    : 02_tables.sql
--- PURPOSE : Create Database Schema
--- AUTHOR  : Jatin Sankhla
--- =====================================================
+-- Database select kar rahe hain
+
+-- Old Tables → Create Tables → Relationships → Indexes
+
+
 
 USE ecommerce_supply_chain;
 
--- =====================================================
--- DROP TABLES (Child Tables First)
--- =====================================================
+
+-- Pehle existing tables ko remove kar rahe hain
+-- Child tables pehle delete karni padti hain kyunki foreign keys lagi hui hain
 
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS payments;
@@ -21,9 +20,8 @@ DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS category_translation;
 DROP TABLE IF EXISTS geolocation;
 
--- =====================================================
--- CUSTOMERS
--- =====================================================
+
+-- Customers ki information store karne ke liye table
 
 CREATE TABLE customers (
 
@@ -39,9 +37,8 @@ CREATE TABLE customers (
 
 );
 
--- =====================================================
--- CATEGORY TRANSLATION
--- =====================================================
+
+-- Product categories ko English name se map karne ke liye
 
 CREATE TABLE category_translation (
 
@@ -51,9 +48,8 @@ CREATE TABLE category_translation (
 
 );
 
--- =====================================================
--- PRODUCTS
--- =====================================================
+
+-- Products ki basic information store karne ke liye
 
 CREATE TABLE products (
 
@@ -75,15 +71,15 @@ CREATE TABLE products (
 
     product_width_cm DECIMAL(10,2),
 
+    -- Product category ko category table se connect kar rahe hain
     CONSTRAINT fk_product_category
         FOREIGN KEY (product_category_name)
         REFERENCES category_translation(product_category_name)
 
 );
 
--- =====================================================
--- SELLERS
--- =====================================================
+
+-- Sellers ki information ke liye
 
 CREATE TABLE sellers (
 
@@ -97,9 +93,8 @@ CREATE TABLE sellers (
 
 );
 
--- =====================================================
--- ORDERS
--- =====================================================
+
+-- Orders ki information store karne ke liye
 
 CREATE TABLE orders (
 
@@ -119,15 +114,15 @@ CREATE TABLE orders (
 
     order_estimated_delivery_date DATETIME,
 
+    -- Har order ko ek customer se connect kar rahe hain
     CONSTRAINT fk_orders_customer
         FOREIGN KEY (customer_id)
         REFERENCES customers(customer_id)
 
 );
 
--- =====================================================
--- ORDER ITEMS
--- =====================================================
+
+-- Order ke andar kaunse products hain uski information
 
 CREATE TABLE order_items (
 
@@ -147,23 +142,25 @@ CREATE TABLE order_items (
 
     PRIMARY KEY (order_id, order_item_id),
 
+    -- Order item ko order se connect kar rahe hain
     CONSTRAINT fk_order_items_orders
         FOREIGN KEY (order_id)
         REFERENCES orders(order_id),
 
+    -- Order item ko product se connect kar rahe hain
     CONSTRAINT fk_order_items_products
         FOREIGN KEY (product_id)
         REFERENCES products(product_id),
 
+    -- Order item ko seller se connect kar rahe hain
     CONSTRAINT fk_order_items_sellers
         FOREIGN KEY (seller_id)
         REFERENCES sellers(seller_id)
 
 );
 
--- =====================================================
--- PAYMENTS
--- =====================================================
+
+-- Orders ke payment details store karne ke liye
 
 CREATE TABLE payments (
 
@@ -179,15 +176,15 @@ CREATE TABLE payments (
 
     PRIMARY KEY (order_id, payment_sequential),
 
+    -- Payment ko order se connect kar rahe hain
     CONSTRAINT fk_payments_orders
         FOREIGN KEY (order_id)
         REFERENCES orders(order_id)
 
 );
 
--- =====================================================
--- REVIEWS
--- =====================================================
+
+-- Customer reviews store karne ke liye
 
 CREATE TABLE reviews (
 
@@ -205,15 +202,15 @@ CREATE TABLE reviews (
 
     review_answer_timestamp DATETIME,
 
+    -- Review ko order se connect kar rahe hain
     CONSTRAINT fk_reviews_orders
         FOREIGN KEY (order_id)
         REFERENCES orders(order_id)
 
 );
 
--- =====================================================
--- GEOLOCATION
--- =====================================================
+
+-- Location aur coordinates ki information ke liye
 
 CREATE TABLE geolocation (
 
@@ -229,9 +226,8 @@ CREATE TABLE geolocation (
 
 );
 
--- =====================================================
--- CREATE INDEXES
--- =====================================================
+
+-- Queries ko fast banane ke liye indexes create kar rahe hain
 
 CREATE INDEX idx_orders_customer
 ON orders(customer_id);
@@ -257,6 +253,5 @@ ON customers(customer_state);
 CREATE INDEX idx_seller_state
 ON sellers(seller_state);
 
--- =====================================================
--- END OF DATABASE SCHEMA
--- =====================================================
+
+-- Database tables aur indexes yaha complete hote hain

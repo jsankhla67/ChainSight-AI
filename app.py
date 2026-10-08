@@ -657,3 +657,4 @@ st.markdown(f"""
     ChainSight AI · E-Commerce Intelligence Platform
 </div>
 """, unsafe_allow_html=True)
+

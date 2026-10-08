@@ -8,12 +8,12 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📦 Product Analytics")
+st.title("Product Analytics")
 st.markdown("---")
 
-# =====================================================
+
 # KPI CARDS
-# =====================================================
+
 
 kpi = run_query("""
 SELECT
@@ -26,16 +26,16 @@ FROM products;
 
 c1, c2, c3, c4 = st.columns(4)
 
-c1.metric("📦 Products", f"{kpi.loc[0,'total_products']:,}")
-c2.metric("⚖ Avg Weight (g)", kpi.loc[0,"avg_weight"])
-c3.metric("📏 Avg Length (cm)", kpi.loc[0,"avg_length"])
-c4.metric("📸 Avg Photos", kpi.loc[0,"avg_photos"])
+c1.metric("Products", f"{kpi.loc[0,'total_products']:,}")
+c2.metric("Avg Weight (g)", kpi.loc[0,"avg_weight"])
+c3.metric("Avg Length (cm)", kpi.loc[0,"avg_length"])
+c4.metric(" Avg Photos", kpi.loc[0,"avg_photos"])
 
 st.markdown("---")
 
-# =====================================================
+
 # CATEGORY DISTRIBUTION
-# =====================================================
+
 
 category = run_query("""
 SELECT
@@ -54,7 +54,7 @@ fig = px.bar(
     x="total_products",
     y="category",
     orientation="h",
-    title="🏷 Product Category Distribution",
+    title="Product Category Distribution",
     color="total_products"
 )
 
@@ -62,9 +62,9 @@ fig.update_layout(template="plotly_white")
 
 st.plotly_chart(fig, use_container_width=True)
 
-# =====================================================
+
 # PRODUCT WEIGHT DISTRIBUTION
-# =====================================================
+
 
 weight = run_query("""
 SELECT
@@ -77,14 +77,14 @@ fig2 = px.histogram(
     weight,
     x="product_weight_g",
     nbins=40,
-    title="⚖ Product Weight Distribution"
+    title=" Product Weight Distribution"
 )
 
 st.plotly_chart(fig2, use_container_width=True)
 
-# =====================================================
+
 # PRODUCT DIMENSIONS
-# =====================================================
+
 
 dimension = run_query("""
 SELECT
@@ -102,14 +102,14 @@ fig3 = px.scatter(
     x="product_length_cm",
     y="product_width_cm",
     color="product_height_cm",
-    title="📏 Product Dimensions"
+    title=" Product Dimensions"
 )
 
 st.plotly_chart(fig3, use_container_width=True)
 
-# =====================================================
+
 # TOP PRODUCTS
-# =====================================================
+
 
 top = run_query("""
 SELECT
@@ -122,13 +122,13 @@ ORDER BY revenue DESC
 LIMIT 20;
 """)
 
-st.subheader("🏆 Top Products by Revenue")
+st.subheader(" Top Products by Revenue")
 
 st.dataframe(top, use_container_width=True)
 
-# =====================================================
+
 # PRODUCT PHOTO ANALYSIS
-# =====================================================
+
 
 photos = run_query("""
 SELECT
