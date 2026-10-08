@@ -6,21 +6,21 @@ ChainSight AI is an AI-powered Business Intelligence platform that combines inte
 
 Users can ask business questions in plain English, and the system automatically generates SQL, queries MySQL, analyzes the results, and provides business insights with visualizations.
 
-## 🚀 Features
+## Features
 
-- 📊 Executive, Sales, Customer, Product, Supply Chain & Review dashboards
-- 🤖 AI Business Analyst for natural-language data queries
-- 🧠 LangChain + Hugging Face LLM integration
-- 🗄️ MySQL database with 17 analytical tables
-- 🔐 Read-only SQL validation for safe AI database access
-- 📈 Automatic Plotly visualizations
-- 📥 CSV export for AI-generated results
+- Executive, Sales, Customer, Product, Supply Chain & Review dashboards
+- AI Business Analyst for natural-language data queries
+- LangChain + Hugging Face LLM integration
+- MySQL database with 17 analytical tables
+- Read-only SQL validation for safe AI database access
+- Automatic Plotly visualizations
+- CSV export for AI-generated results
 
 🛠️ Tech Stack
 
 Python · Streamlit · MySQL · SQLAlchemy · PyMySQL · Pandas · NumPy · Plotly · LangChain · Hugging Face
 
-📊 Dataset
+Dataset
 
 Built using the Brazilian E-Commerce Public Dataset by Olist, containing approximately 99K+ e-commerce records across customers, orders, products, sellers, payments, reviews, and delivery data.
 
@@ -52,7 +52,7 @@ or whatever u like to ask
 ChainSight AI generates the SQL, retrieves the data from MySQL, explains the results, and automatically creates a visualization.
 
 
-👨‍💻 Author
+Author
 
 Jatin Sankhla
 

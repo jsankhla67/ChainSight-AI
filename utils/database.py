@@ -9,9 +9,15 @@ load_dotenv() # .env ko load krta hai
 DATABASE_URL = os.getenv("DATABASE_URL") #  
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL is not set")
+    raise ValueError(
+        "DATABASE_URL is not configured. "
+        "Add DATABASE_URL to Streamlit Cloud Secrets."
+    )
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+)
 
 
 def get_connection():
